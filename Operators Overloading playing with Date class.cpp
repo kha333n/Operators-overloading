@@ -7,9 +7,9 @@ using namespace std;
 class Date
 {
 private:
-	int day{};
-	int month{};
-	int year{};
+	int day;
+	int month;
+	int year;
 	int verifyDay(int);
 	int verifyMonth(int);
 	int verifyYear(int);
@@ -28,8 +28,7 @@ public:
 
 int main()
 {
-
-	Date today(3, 8, 2017),d2(5,7,2019);
+	Date today(31, 12, 2017),d2(31,12,2019);
 	today = today + d2;
 	cout << "Default date." << endl;
 	today.displayDate();
@@ -200,18 +199,79 @@ int Date::getinput()
 
 Date Date::operator +(Date d)
 {
+	Date temp;
 	int r[12];
 	r[0] = 31; r[2] = 31; r[3] = 30; r[4] = 31; r[5] = 30; r[6] = 31; r[7] = 31; r[8] = 30;
 	r[9] = 31; r[10] = 30; r[11] = 31;
-	if ( (year%4) == 0 )
+	if ( (year % 4) == 0 )
 	{
-		r[2] = 29;
+		r[1] = 29;
 	}
 	else
 	{
-		r[2] = 28;
+		r[1] = 28;
 	}
+
+	int tempday, tempmonth;
+	tempday = day + d.day;
 	
+	if (tempday > r[month - 1])
+	{
+		month += 1;
+		if (month > 12)
+		{
+			month = 1;
+			year += 1;
+			tempday = tempday - r[0];
+			if (tempday > r[0])
+			{
+				month += 1;
+				tempday = tempday - r[0];
+			}
+		}
+		else
+		{
+			month += 1;
+			tempday = tempday - r[month];
+			if (tempday > r[month - 1])
+		{
+			month += 1;
+			tempday = tempday - r[month];
+		}
+		}
+		if (tempday == 0)
+		{
+			tempday = 1;
+		}
+		temp.day = tempday;
+	}
+	else
+	{
+		temp.day = tempday;
+	}
+	tempmonth = month + d.month;
+
+	if (tempmonth > 12)
+	{
+		year += 1;
+		tempmonth = tempmonth - 12;
+		if (tempmonth > 12)
+		{
+			year += 1;
+			tempmonth = tempmonth - 12;
+		}
+		if (tempmonth == 0)
+		{
+			tempmonth = 1;
+		}
+	}
+	else
+	{
+		temp.month = tempmonth;
+	}
+
+	temp.year = year + d.year;
+	return temp;
 }
 
 
